@@ -15,13 +15,13 @@ SystemInformer Checker — это программа для проверки с�
 ## 📷 Скриншоты программы
 
 ### 🇬🇧 English version
-![English Version](images/check_eu.png)
+![English Version](image/check_eu.png)
 
 ### 🇷🇺 Русская версия
-![Russian Version](images/loading_ru.png)
+![Russian Version](image/loading_ru.png)
 
 ### 🇺🇦 Українська версія
-![Ukrainian Version](images/loading_ua.png)
+![Ukrainian Version](image/loading_ua.png)
 
 ---
 
